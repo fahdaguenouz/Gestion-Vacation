@@ -1,0 +1,88 @@
+#cont{
+    text-align: center;
+    width: 100%;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    border-radius: 25px;
+    height: auto;
+    margin-top: 10vh;
+    background: #fff;
+    padding: 1em 0;
+    position: relative;
+    transition: height 0.5s;
+    padding: 15px;
+    height: auto;
+    overflow: hidden;
+}
+.label-float{  
+    position: relative;
+    padding-top: 13px;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    display: flex; 
+    flex-direction: column
+  }
+  .label-float input{
+    border: 1px solid lightgrey;
+    border-radius: 15px;
+    outline: none;
+    min-width: 200px;
+    padding: 15px 20px;
+    font-size: 16px;
+    transition: all .1s linear;
+    -webkit-transition: all .1s linear;
+    -moz-transition: all .1s linear;
+
+  }
+
+  .label-float input:focus{
+    border: 2px solid #3951b2;
+  }
+  
+  .selectpicker{
+    border: 1px solid lightgrey;
+    border-radius: 15px;
+    outline: none;
+    min-width: 200px;
+    padding: 17px 20px;
+    font-size: 16px;
+    transition: all .1s linear;
+  }
+
+  .label-float .selectpicker:focus{
+    border: 2px solid #3951b2;
+  }
+  .label-float label{
+    pointer-events: none;
+    position: absolute;
+    top: calc(50% - 8px);
+    left: 15px;
+    transition: all .1s linear;
+    -webkit-transition: all .1s linear;
+    -moz-transition: all .1s linear;
+    background-color: white;
+    padding: 5px;
+    box-sizing: border-box;
+  }
+  
+  .label-float input:focus + label,
+  .label-float input:not(:placeholder-shown) + label{
+    font-size: 13px;
+    top: 0;
+    color: #3951b2;
+  }
+  #button{
+    margin-top:12px;
+    height: 40px;
+    padding-left:50px ;
+    padding-right:50px ;
+    border-radius: 30px;
+
+    display: inline-flex;
+    justify-content: center; 
+    align-items: center;
+   }
+h2{
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+
+

@@ -1,0 +1,84 @@
+body {
+  background: #f3f3f3 !important;
+}
+.blmdWrapp {
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px !important;
+  border-radius: 20px !important;
+  height: auto !important;
+  margin-top: 10vh !important;
+  background: #fff !important;
+  padding: 1em 0 !important;
+  position: relative !important;
+  transition: height 0.5s !important;
+}
+
+.blmdWrapp .blmdContiner {
+  padding: 15px !important;
+  height: auto !important;
+  overflow: hidden !important;
+}
+.blmdWrapp .blmdContiner form {
+  max-height: auto !important;
+  transition: all 0.5s !important;
+}
+.blmdWrapp .blmdContiner form > h1 {
+  padding: 15px 0 15px 30px !important;
+  margin-right: 15px !important;
+  margin-left: -30px !important;
+  position: relative !important;
+  color: #3f51b5 !important;
+}
+
+.blmdWrapp .blmdContiner form#login-form > h1 {
+  border-left: 17px solid #3f51b5 !important;
+}
+.btnSubmit {
+  background: #3f51b5 !important;
+  color: #fff !important;
+  width: 100% !important;
+  border-radius: 20px !important;
+}
+.rippleEffect {
+  position: relative !important;
+  overflow: hidden !important;
+  transform: translate3d(0, 0, 0) !important;
+}
+.blmdForm {
+  margin: 3rem 0 !important;
+  position: relative !important;
+  width: 100% !important;
+}
+.blmdForm .blmdLine {
+  display: inline-block !important;
+  width: 100% !important;
+  position: relative !important;
+  vertical-align: top !important;
+}
+.blmdForm .formInput {
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  position: relative !important;
+  background: transparent !important;
+  z-index: 1 !important;
+  border: 0 !important;
+  padding: 0 !important;
+}
+
+.divWrapp {
+  margin: 0 auto !important;
+}
+.formInput {
+  height: 45px !important;
+}
+.divInputWrapp {
+  padding-right: 15px !important;
+  padding-left: 15px !important;
+}
+.inp {
+  position: relative !important;
+  margin: auto !important;
+  width: 100% !important;
+  max-width: 280px !important;
+  border-radius: 3px !important;
+  overflow: hidden !important;
+}
