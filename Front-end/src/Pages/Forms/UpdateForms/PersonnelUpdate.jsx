@@ -8,7 +8,7 @@ import Swal from 'sweetalert2';
 
 export default function PersonnelUpdate( {code}) {
 
-  const { grade,etablissement, matiere, fonctionRole,personnel, logout, authenticated, loading } = Usercontext()
+  const { grade,etablissement, matiere, fonctionRole,personnel, logout, typedePaiement, loading } = Usercontext()
   const navigate = useNavigate()
   
   // const { CodeDoti } = useParams();
@@ -237,14 +237,14 @@ export default function PersonnelUpdate( {code}) {
             </select>
           </div>
           <div class="label-float col">
-            <select class="form-control" name="CodeMatiere"
-              value="${data.CodeMatiere}"
+            <select class="form-control" name="IdTypePaiement" id="IdTypePaiement"
+              value="${data.IdTypePaiement}"
                >
-              <option selected disabled>Code Matiere</option>
+              <option selected disabled>Cycle</option>
               ${
-                matiere.map((matieres) => {
+                typedePaiement.map((type) => {
                   return (
-                    `<option key="${matieres.CodeGrade}" value="${matieres.CodeMatiere}"  ${data.CodeMatiere === matieres.CodeMatiere ? 'selected' : ''}>${matieres.LibelleAr}</option>`
+                    `<option key="${type.IdTypePaiement}" value="${type.IdTypePaiement}" >${type.Libelle}</option>`
                   )
                 })
               }
@@ -252,7 +252,20 @@ export default function PersonnelUpdate( {code}) {
           </div>
         </div>
         <div class='row '>
-    
+        <div class="label-float col">
+        <select class="form-control" name="CodeMatiere" id="CodeMatiere"
+          value="${data.CodeMatiere}"
+           >
+          <option selected disabled>Code Matiere</option>
+          ${
+            matiere.map((matieres) => {
+              return (
+                `<option key="${matieres.CodeGrade}" value="${matieres.CodeMatiere}"  ${data.CodeMatiere === matieres.CodeMatiere ? 'selected' : ''}>${matieres.LibelleAr}</option>`
+              )
+            })
+          }
+        </select>
+      </div>
     
           <div class="label-float col">
             <input type="text" placeholder=" " required name="Rib" class="form-control"
@@ -299,6 +312,27 @@ export default function PersonnelUpdate( {code}) {
       didOpen: () => {
       
         // document.getElementById('FichierRib').addEventListener('change', handleFileChange);
+        setTimeout(() => {
+          const idTypePaiementSelect = document.getElementById('IdTypePaiement');
+          const codeMatiereSelect = document.getElementById('CodeMatiere');
+          if (idTypePaiementSelect && codeMatiereSelect) {
+              idTypePaiementSelect.addEventListener('change', (event) => {
+                  const selectedIdTypePaiement = event.target.value;
+                  const filteredMatieres = matiere.filter(m => m.IdTypePaiement === selectedIdTypePaiement);
+                  // Update CodeMatiere select options
+                  codeMatiereSelect.innerHTML = `
+                      <option selected disabled>Matiere</option>
+                      ${filteredMatieres.map(m => `<option key="${m.CodeMatiere}" value="${m.CodeMatiere}">${m.LibelleAr}</option>`)}
+                  `;
+              });
+  
+              // Remove the event listener when the Swal modal is closed
+              Swal.getCloseButton().addEventListener('click', () => {
+                  idTypePaiementSelect.removeEventListener('change', () => {});
+              });
+          }
+      }, 100);
+      
         document.getElementById('ClearFile').addEventListener('click', handleClearFile);
 
        
@@ -306,6 +340,9 @@ export default function PersonnelUpdate( {code}) {
       willClose: () => {
         // document.getElementById('FichierRib').removeEventListener('change', handleFileChange);
         document.getElementById('ClearFile').removeEventListener('click', handleClearFile);
+        Swal.getCloseButton().addEventListener('click', () => {
+          idTypePaiementSelect.removeEventListener('change', () => {});
+      });
 
     },
     });

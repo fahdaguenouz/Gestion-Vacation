@@ -40,6 +40,7 @@ const Dashboard = () => {
         return <div>Loading...</div>;
     }
 
+    // console.log(personnel);
 
     const displayData = detailCorrection.map(detail => {
         // Find the matching personnel for each detailCorrection

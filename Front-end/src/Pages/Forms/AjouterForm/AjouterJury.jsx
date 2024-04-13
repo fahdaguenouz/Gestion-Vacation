@@ -6,11 +6,14 @@ import UserApi from '../../../service/api/UserApi';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 const AjouterJury = () => {
-  const {  addJuryItem,juries,matiere, user, logout, authenticated, loading } = Usercontext()
+  const {  addJuryItem,juries,matiere, typedePaiement, user, logout, authenticated, loading } = Usercontext()
   const navigate = useNavigate()
   
   const [CodeMatiere, setCodeMatiere] = useState('');
+  const [selectedIdTypePaiement, setSelectedIdTypePaiement] = useState('');
+  const [Matiere_id,setMatiere_id]=useState('');
 
+  const filteredMatieres = matiere.filter((m) => m.IdTypePaiement === selectedIdTypePaiement);
 //   const [formData, setFormData] = useState({
 //     NumJury: '',
 //     CodeMatiere: '',
@@ -27,28 +30,37 @@ const AjouterJury = () => {
   const handleChange = (e, index) => {
     const { name, value } = e.target;
 
-    // If the change is to CodeMatiere, update it and apply to all lines
-    if (name === 'CodeMatiere') {
+    if (name === 'IdTypePaiement') {
+      setSelectedIdTypePaiement(value);
+    } else if (name === 'CodeMatiere') {
+      const selectedMatiere = matiere.find((m) => m.CodeMatiere === value);
       setCodeMatiere(value);
-      setLines(lines.map(line => ({ ...line, CodeMatiere: value })));
+      setMatiere_id(selectedMatiere ? selectedMatiere.id : '');
+      setLines(lines.map((line, i) => {
+        if (i === index) {
+          return { ...line, CodeMatiere: value, Matiere_id: selectedMatiere ? selectedMatiere.id : '' };
+        }
+        return line;
+      }));
     } else {
-      // Otherwise, it's a change to a line's NumJury or NombreCopies
       const newLines = [...lines];
       newLines[index][name] = value;
-      // Check if the current line is empty and add a new line if it is
       if (index === newLines.length - 1 || newLines[index].NumJury === !null || newLines[index].NombreCopies === !null) {
-        setLines([...newLines, { NumJury: '', CodeMatiere: CodeMatiere, NombreCopies: '' }]);
+        setLines([...newLines, { NumJury: '', CodeMatiere: CodeMatiere, Matiere_id: Matiere_id, NombreCopies: '' }]);
       } else {
         setLines(newLines);
       }
     }
+
+    console.log(filteredMatieres);
   };
 
 
   // Function to add a new line of inputs
   const handleAddLine = () => {
-    setLines([...lines, { NumJury: '', CodeMatiere: CodeMatiere, NombreCopies: '' }]);
+    setLines([...lines, { NumJury: '', CodeMatiere: CodeMatiere,Matiere_id:Matiere_id, NombreCopies: '' }]);
   };
+  
 
   // Function to remove a line of inputs
   const handleRemoveLine = (index, e) => {
@@ -61,6 +73,7 @@ const AjouterJury = () => {
   
 
   const handleSubmit = async (e) => {
+    
     e.preventDefault();
 
     lines.forEach((line) => {
@@ -68,8 +81,9 @@ const AjouterJury = () => {
           NumJury: line.NumJury,
           CodeMatiere: line.CodeMatiere,
           NombreCopies: line.NombreCopies,
+          Matiere_id:line.Matiere_id
         };
-        console.log(submissionData);
+        // console.log(submissionData);
       });
 
     //   console.log(juries);
@@ -77,7 +91,7 @@ const AjouterJury = () => {
     // console.log('RRRR');
     addJuryItem({ juries: lines })
     // console.log('RRRR');
-    // console.log({juries: lines });
+    console.log({juries: lines });
 
     try {
       const response = await UserApi.Ajouter_Jury({ juries: lines });
@@ -107,9 +121,15 @@ const AjouterJury = () => {
         <div className='row'>
           <div className="col-4"></div>
           <div className="label-Bud col-4 ">
+          <select className="selectBud show-tick"  onChange={handleChange} name='IdTypePaiement' value={selectedIdTypePaiement}>
+              <option selected disabled>Cycle</option>
+              {typedePaiement.map((type) => (
+                <option key={type.IdTypePaiement} value={type.IdTypePaiement}>{type.Libelle}</option>
+              ))}
+            </select>
             <select className="selectBud show-tick"  onChange={handleChange} name='CodeMatiere' value={CodeMatiere}>
               <option selected disabled>Matieres</option>
-              {matiere.map((matieres) => (
+              {filteredMatieres.map((matieres) => (
                 <option key={matieres.CodeMatiere} value={matieres.CodeMatiere}>{matieres.LibelleAr}</option>
               ))}
             </select>

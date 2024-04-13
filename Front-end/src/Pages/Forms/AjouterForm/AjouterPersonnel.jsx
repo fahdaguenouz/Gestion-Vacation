@@ -8,7 +8,7 @@ import Swal from 'sweetalert2';
 
 export default function AjouterPersonnel({ onCancel }) {
 
-  const { grade,etablissement,AjouterDisplay,setAjouterDisplay, matiere, fonctionRole, logout, authenticated, loading } = Usercontext()
+  const { grade,etablissement,AjouterDisplay,typedePaiement, matiere, fonctionRole, logout, authenticated, loading } = Usercontext()
   const navigate = useNavigate()
   const [file, setFile] = useState(null);
   const [fileSelected, setFileSelected] = useState(false);
@@ -23,7 +23,7 @@ export default function AjouterPersonnel({ onCancel }) {
     Rib: '',
     CodeGrade: '',
     CodeFonct: '',
-    CodeMatiere: '',
+    Matiere_id: '',
     LibelleAr: '',
     LibelleFr: '',
     Taux: '',
@@ -77,7 +77,7 @@ export default function AjouterPersonnel({ onCancel }) {
       Rib:e.target.value.Rib,
       CodeGrade:e.target.value.CodeGrade,
       CodeFonct:e.target.value.CodeFonct,
-      CodeMatiere:e.target.value.CodeMatiere,
+      Matiere_id:e.target.value.Matiere_id,
       LibelleAr:e.target.value.LibelleAr,
       LibelleFr:e.target.value.LibelleFr,
       Taux:e.target.value.Taux,
@@ -116,7 +116,7 @@ export default function AjouterPersonnel({ onCancel }) {
       let errorMessages = [];
     
       if (error.response && error.response.data && error.response.data.errors) {
-        const {FichierRib,Taux,CodeEtablissement, CodeDoti, Cin, Rib,CodeGrade,CodeFonct,CodeMatiere,LibelleAr,LibelleFr } = error.response.data.errors;
+        const {FichierRib,Taux,CodeEtablissement, CodeDoti, Cin, Rib,CodeGrade,CodeFonct,Matiere_id,LibelleAr,LibelleFr } = error.response.data.errors;
         if (LibelleAr) {
           errorMessages.push(LibelleAr);
         }
@@ -138,8 +138,8 @@ export default function AjouterPersonnel({ onCancel }) {
         if (CodeFonct) {
           errorMessages.push(CodeFonct);
         }
-        if (CodeMatiere) {
-          errorMessages.push(CodeMatiere);
+        if (Matiere_id) {
+          errorMessages.push(Matiere_id);
         }
         if (Taux) {
           errorMessages.push(Taux);
@@ -221,14 +221,23 @@ export default function AjouterPersonnel({ onCancel }) {
                 </select>
               </div>
               <div class="col">
+              <label for="CodeMatiere">Cycle</label>
+
+                <select class="form-control" id="IdTypePaiement" name="IdTypePaiement" value={formData.IdTypePaiement} >
+                  <option selected disabled>Cycle</option>
+                  ${typedePaiement.map((type) => `<option key="${type.IdTypePaiement}" value="${type.IdTypePaiement}">${type.Libelle}</option>`)}
+                </select>
+              </div>
+              
+            </div>
+            <div class="form-group row">
+            <div class="col">
                 <label for="CodeMatiere">Code Matiere</label>
-                <select class="form-control" id="CodeMatiere" name="CodeMatiere" value={formData.CodeMatiere} >
+                <select class="form-control" id="CodeMatiere" name="Matiere_id" value={formData.Matiere_id} >
                   <option selected disabled>Code Matiere</option>
                   ${matiere.map((matieres) => `<option key="${matieres.CodeGrade}" value="${matieres.CodeMatiere}">${matieres.LibelleAr}</option>`)}
                 </select>
               </div>
-            </div>
-            <div class="form-group row">
               <div class="col">
                 <label for="Rib">RIB</label>
                 <input type="text" class="form-control" id="Rib" name="Rib"  value="${formData.Rib}" />
@@ -256,6 +265,19 @@ export default function AjouterPersonnel({ onCancel }) {
         handleSubmit({ preventDefault: () => { }, target: { value: data } });
       },
       didOpen: () => {
+        
+          // Handle Matiere select options based on selected IdTypePaiement
+          const idTypePaiementSelect = document.getElementById('IdTypePaiement');
+          const codeMatiereSelect = document.getElementById('CodeMatiere');
+          idTypePaiementSelect.addEventListener('change', (event) => {
+              const selectedIdTypePaiement = event.target.value;
+              const filteredMatieres = matiere.filter(m => m.IdTypePaiement === selectedIdTypePaiement);
+              // Update CodeMatiere select options
+              codeMatiereSelect.innerHTML = `
+                  <option selected disabled>Code Matiere</option>
+                  ${filteredMatieres.map(m => `<option key="${m.CodeMatiere}" value="${m.id}">${m.LibelleAr}</option>`)}
+              `;
+          });
       
         document.getElementById('FichierRib').addEventListener('change', handleFileChange);
         document.getElementById('ClearFile').addEventListener('click', handleClearFile);
@@ -265,7 +287,9 @@ export default function AjouterPersonnel({ onCancel }) {
       willClose: () => {
         document.getElementById('FichierRib').removeEventListener('change', handleFileChange);
         document.getElementById('ClearFile').removeEventListener('click', handleClearFile);
-
+        Swal.getCloseButton().addEventListener('click', () => {
+          idTypePaiementSelect.removeEventListener('change', () => {});
+      });
     },
       
     });
